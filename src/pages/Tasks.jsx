@@ -1,0 +1,148 @@
+import React, { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import TaskList from "../components/TaskList";
+
+const Tasks = () => {
+  const { titleId } = useParams();
+  const [task, setTask] = useState("");
+  const [tasks, setTasks] = useState([]);
+  const [title, setTitle] = useState("");
+  const printRef = useRef(null);
+  const Url = import.meta.env.VITE_URL;
+
+  useEffect(() => {
+    axios
+      .get(`${Url}/tasks/${titleId}`)
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setTasks(res.data);
+        } else {
+          console.error("Expected array, got:", res.data);
+          setTasks([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching tasks:", err);
+        setTasks([]);
+      });
+    axios.get(`${Url}/card/${titleId}`).then((res) => {
+      const updatedTasks = res.data.map((t) => ({
+        ...t,
+        checked: false,
+        details: "",
+      }));
+      setTasks(updatedTasks);
+    });
+
+    axios.get(`${Url}/card/${titleId}`).then((res) => {
+      setTitle(res.data.title);
+    });
+  }, [titleId]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post(`${Url}/tasks`, { titleId, task }).then((res) => {
+      setTasks((prev) => [
+        ...prev,
+        { ...res.data, checked: false, details: "" },
+      ]);
+      setTask("");
+    });
+  };
+
+  const handleCheckChange = (id, checked) => {
+    setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, checked } : t)));
+  };
+
+  const handleDetailsChange = (id, details) => {
+    setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, details } : t)));
+  };
+
+  const handleDelete = (taskId) => {
+    axios
+      .delete(`${Url}/tasks/${taskId}`)
+      .then(() => {
+        setTasks((prevTasks) => prevTasks.filter((t) => t._id !== taskId));
+      })
+      .catch((err) => console.error("Delete failed:", err));
+  };
+
+  const handlePrint = () => {
+    const printWindow = window.open("", "PRINT", "width=58");
+    const checkedTasks = tasks.filter((t) => t.checked);
+
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <style>
+            body {padding: 20px;}
+            ol { padding-left: 20px; }
+            li { margin-bottom: 10px; font-size: 30px; }
+            h2 { text-align: center; text-transform: uppercase; font-size: 40px;}
+          </style>
+        </head>
+        <body>
+          <h2>${title}</h2>
+          <hr/>
+          <ol>
+            ${checkedTasks
+              .map((t) => `<li>${t.task}  ${t.details || " "}</li>`)
+              .join("")}
+          </ol>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
+
+  return (
+    <div className="h-full w-screen">
+      <form
+        onSubmit={handleSubmit}
+        className="fixed h-20 w-screen flex items-center justify-center bg-white pt-10 max-md:pt-5 max-md:h-15"
+      >
+        <input
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          placeholder="New task"
+          className="border-2 border-emerald-400 rounded-l-sm pl-2 h-10 w-60 focus:outline-none max-md:h-8 max-md:w-40"
+          required
+        />
+        <button
+          type="submit"
+          className="bg-emerald-400 rounded-r-sm h-10 text-white px-1 max-md:h-8"
+        >
+          Add Task
+        </button>
+      </form>
+
+      <div className="h-20 max-md:h-15"></div>
+
+      {Array.isArray(tasks) &&
+        tasks.map((t) => (
+          <TaskList
+            key={t._id}
+            t={t}
+            onCheckChange={handleCheckChange}
+            onDetailsChange={handleDetailsChange}
+            handleDelete={handleDelete}
+          />
+        ))}
+
+      <button
+        className="fixed bottom-5 left-3/4 text-xl font-bold rounded-md px-2 py-1 text-white bg-blue-400 hover:bg-blue-500"
+        onClick={handlePrint}
+      >
+        Print
+      </button>
+    </div>
+  );
+};
+
+export default Tasks;
