@@ -154,19 +154,20 @@ const Tasks = () => {
             handleDelete={handleDelete}
           />
         ))}
-
-      <button
-        className="fixed bottom-5 left-3/4 text-xl font-bold rounded-md px-2 py-1 text-white bg-blue-400 hover:bg-blue-500"
-        onClick={handlePrint}
-      >
-        Print
-      </button>
-      <button
-        className="fixed bottom-5 left-1/8 text-xl font-bold rounded-md px-2 py-1 text-white bg-emerald-400 hover:bg-emerald-500"
-        onClick={handleSave}
-      >
-        Save
-      </button>
+      <div className="flex justify-between items-center px-4 py-2">
+        <button
+          className="text-xl font-bold rounded-md px-2 py-1 text-white bg-emerald-400 hover:bg-emerald-500"
+          onClick={handleSave}
+        >
+          Save
+        </button>
+        <button
+          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-blue-400 hover:bg-blue-500 mr-5 max-md:mr-0"
+          onClick={handlePrint}
+        >
+          Print
+        </button>
+      </div>
     </div>
   );
 };
