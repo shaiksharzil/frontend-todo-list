@@ -16,7 +16,12 @@ const Tasks = () => {
       .get(`${Url}/tasks/${titleId}`)
       .then((res) => {
         if (Array.isArray(res.data)) {
-          setTasks(res.data);
+          const formatted = res.data.map((t) => ({
+            ...t,
+            checked: t.checked || false,
+            details: t.inputValue || "", // Show saved input value
+          }));
+          setTasks(formatted);
         } else {
           console.error("Expected array, got:", res.data);
           setTasks([]);
@@ -26,19 +31,12 @@ const Tasks = () => {
         console.error("Error fetching tasks:", err);
         setTasks([]);
       });
-    axios.get(`${Url}/card/${titleId}`).then((res) => {
-      const updatedTasks = res.data.map((t) => ({
-        ...t,
-        checked: false,
-        details: "",
-      }));
-      setTasks(updatedTasks);
-    });
 
     axios.get(`${Url}/card/${titleId}`).then((res) => {
       setTitle(res.data.title);
     });
   }, [titleId]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -69,7 +67,7 @@ const Tasks = () => {
   };
 
   const handlePrint = () => {
-    const printWindow = window.open("", "PRINT", "height=650,width=900");
+    const printWindow = window.open("", "PRINT", "width=58");
     const checkedTasks = tasks.filter((t) => t.checked);
 
     if (!printWindow) return;
@@ -88,9 +86,12 @@ const Tasks = () => {
           <h2>${title}</h2>
           <hr/>
           <ol>
-            ${checkedTasks.map((t) => `<li>${t.task} ${t.details  || " "}</li>`)
+            ${checkedTasks
+              .map((t) => `<li>${t.task} ${t.details || " "}</li>`)
               .join("")}
           </ol>
+          <hr/>
+          <br/>
         </body>
       </html>
     `);
@@ -99,6 +100,26 @@ const Tasks = () => {
     printWindow.print();
     printWindow.close();
   };
+
+  const handleSave = () => {
+    const updatedTasks = tasks.map((t) => ({
+      _id: t._id,
+      checked: t.checked,
+      details: t.details || "", // details is used in frontend
+    }));
+
+    axios
+      .put(`${Url}/tasks/save`, { tasks: updatedTasks })
+      .then((res) => {
+        console.log("Tasks saved:", res.data);
+        alert("Tasks saved successfully!");
+      })
+      .catch((err) => {
+        console.error("Save failed:", err);
+        alert("Failed to save tasks.");
+      });
+  };
+
 
   return (
     <div className="h-full w-screen">
@@ -139,6 +160,12 @@ const Tasks = () => {
         onClick={handlePrint}
       >
         Print
+      </button>
+      <button
+        className="fixed bottom-5 left-1/8 text-xl font-bold rounded-md px-2 py-1 text-white bg-emerald-400 hover:bg-emerald-500"
+        onClick={handleSave}
+      >
+        Save
       </button>
     </div>
   );

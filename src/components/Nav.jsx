@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 
@@ -11,12 +11,15 @@ const Nav = (props) => {
     localStorage.removeItem("token");
     navigate("/login");
     }
-    const {username} = useContext(AuthContext);
-
+  const { username } = useContext(AuthContext);
   return (
     <div>
       <div className="h-16 w-screen border-b-1 flex justify-between items-center px-6 max-md:px-2 fixed bg-white">
-        <h1 className="text-3xl max-md:text-xl">Welcome {username}</h1>
+        <Link to={"/"}> 
+          <h1 className="text-3xl max-md:text-xl mx-2">
+            <i class="ri-todo-line"></i>TodoList
+          </h1>
+        </Link>
         <button
           onClick={logout}
           className="bg-red-400 hover:bg-red-500 text-xl px-2 py-1 rounded-md text-white active:scale-95  max-md:text-lg"
