@@ -69,7 +69,7 @@ const Tasks = () => {
   };
 
   const handlePrint = () => {
-    const printWindow = window.open("", "PRINT", "width=58");
+    const printWindow = window.open("", "PRINT", "width=220");
     const checkedTasks = tasks.filter((t) => t.checked);
 
     if (!printWindow) return;
@@ -80,16 +80,15 @@ const Tasks = () => {
           <style>
             body {padding: 20px;}
             ol { padding-left: 20px; }
-            li { margin-bottom: 10px; font-size: 30px; }
-            h2 { text-align: center; text-transform: uppercase; font-size: 40px;}
+            li { margin-bottom: 10px;}
+            h2 { text-align: center; text-transform: uppercase;}
           </style>
         </head>
         <body>
           <h2>${title}</h2>
           <hr/>
           <ol>
-            ${checkedTasks
-              .map((t) => `<li>${t.task}  ${t.details || " "}</li>`)
+            ${checkedTasks.map((t) => `<li>${t.task} ${t.details  || " "}</li>`)
               .join("")}
           </ol>
         </body>

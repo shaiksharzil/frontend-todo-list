@@ -39,7 +39,7 @@ const Login = () => {
             <input
               type="text"
               placeholder="Enter username"
-              className="bg-[#EEEEEE] rounded-md pl-2 h-8 mb-2 w-full"
+              className="bg-[#EEEEEE] rounded-md focus:outline-none pl-2 h-8 mb-2 w-full"
               onChange={(e) => setUsername(e.target.value)}
               required
             />
@@ -49,7 +49,7 @@ const Login = () => {
             <input
               type="password"
               placeholder="Enter password"
-              className="bg-[#EEEEEE] rounded-md pl-2 h-8 mb-3 w-full"
+              className="bg-[#EEEEEE] rounded-md focus:outline-none pl-2 h-8 mb-3 w-full"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
