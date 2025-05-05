@@ -86,10 +86,10 @@ const Tasks = () => {
           <h2>${title}</h2>
           <hr/>
           <ol>
-            ${checkedTasks
-              .map((t) => `<li>${t.task} ${t.details || " "}</li>`)
-              .join("")}
-          </ol>
+  ${checkedTasks
+    .map((t) => `<li>${t.details ? `${t.task} - ${t.details}` : t.task}</li>`)
+    .join("")}
+</ol>
           <hr/>
           <br/>
         </body>
