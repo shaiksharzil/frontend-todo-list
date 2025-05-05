@@ -69,7 +69,7 @@ const Tasks = () => {
   };
 
   const handlePrint = () => {
-    const printWindow = window.open("", "PRINT", "width=220");
+    const printWindow = window.open("", "PRINT", "height=650,width=900");
     const checkedTasks = tasks.filter((t) => t.checked);
 
     if (!printWindow) return;

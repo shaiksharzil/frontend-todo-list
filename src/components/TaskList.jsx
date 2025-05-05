@@ -7,7 +7,7 @@ const TaskList = ({ t, onCheckChange, onDetailsChange, handleDelete }) => {
         <div className="flex flex-row items-center gap-2">
           <input
             type="checkbox"
-            className="h-5 w-5 accent-white  cursor-pointer"
+            className="h-5 w-5 accent-black  cursor-pointer"
             checked={t.checked || false}
             onChange={(e) => onCheckChange(t._id, e.target.checked)}
           />
@@ -16,7 +16,7 @@ const TaskList = ({ t, onCheckChange, onDetailsChange, handleDelete }) => {
         <div className="flex flex-row items-center gap-2">
           <input
             type="text"
-            className="border-2 border-emerald-400 focus:outline-none rounded w-25 max-md:w-18 pl-2"
+            className="border-2 border-[#EEEEEE] focus:outline-none rounded w-25 max-md:w-18 pl-2"
             placeholder="Details"
             value={t.details || ""}
             onChange={(e) => onDetailsChange(t._id, e.target.value)}
