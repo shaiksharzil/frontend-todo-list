@@ -77,7 +77,7 @@ const Home = () => {
 
       <div className="h-20 max-md:h-15"></div>
 
-      <div className="flex flex-wrap gap-4 mt-5 mx-9 max-md:w-screen">
+      <div className="flex flex-wrap gap-4 mt-5 mx-9  max-md:pr-36">
         {cards.map((card) => (
           <TitleCard key={card._id} card={card} />
         ))}

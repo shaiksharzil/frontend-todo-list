@@ -15,7 +15,7 @@ const Nav = (props) => {
 
   return (
     <div>
-      <div className="h-16 w-full border-b-1 flex justify-between items-center px-6 max-md:px-2 fixed bg-white">
+      <div className="h-16 w-screen border-b-1 flex justify-between items-center px-6 max-md:px-2 fixed bg-white">
         <h1 className="text-3xl max-md:text-xl">Welcome {username}</h1>
         <button
           onClick={logout}
