@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import TaskList from "../components/TaskList";
+import { ToastContainer, toast } from "react-toastify";
 
 const Tasks = () => {
   const { titleId } = useParams();
@@ -10,7 +11,7 @@ const Tasks = () => {
   const [title, setTitle] = useState("");
   const printRef = useRef(null);
   const Url = import.meta.env.VITE_URL;
-
+  
   useEffect(() => {
     axios
       .get(`${Url}/tasks/${titleId}`)
@@ -45,6 +46,7 @@ const Tasks = () => {
         ...prev,
         { ...res.data, checked: false, details: "" },
       ]);
+      toast.success("New task successfully added");
       setTask("");
     });
   };
@@ -62,12 +64,13 @@ const Tasks = () => {
       .delete(`${Url}/tasks/${taskId}`)
       .then(() => {
         setTasks((prevTasks) => prevTasks.filter((t) => t._id !== taskId));
+        toast.warn("Task deleted successfully")
       })
       .catch((err) => console.error("Delete failed:", err));
   };
 
   const handlePrint = () => {
-    const printWindow = window.open("", "PRINT", "width=58");
+    const printWindow = window.open("", "PRINT", "width=88");
     const checkedTasks = tasks.filter((t) => t.checked);
 
     if (!printWindow) return;
@@ -90,7 +93,6 @@ const Tasks = () => {
     .map((t) => `<li>${t.details ? `${t.task} - ${t.details}` : t.task}</li>`)
     .join("")}
 </ol>
-          <hr/>
           <br/>
         </body>
       </html>
@@ -112,17 +114,41 @@ const Tasks = () => {
       .put(`${Url}/tasks/save`, { tasks: updatedTasks })
       .then((res) => {
         console.log("Tasks saved:", res.data);
-        alert("Tasks saved successfully!");
+        toast.success("Tasks saved successfully!",{position:"top-center"});
       })
       .catch((err) => {
         console.error("Save failed:", err);
-        alert("Failed to save tasks.");
+        toast.error("Failed to save tasks.",{position:"top-center"});
+      });
+  };
+
+  const handleReset = () => {
+    const resetTasks = tasks.map((t) => ({
+      _id: t._id,
+      checked: false,
+      details: "",
+    }));
+
+    axios
+      .put(`${Url}/tasks/save`, { tasks: resetTasks })
+      .then((res) => {
+        console.log("Tasks reset:", res.data);
+        toast.warn("Tasks reset successfully!",{position:"top-center"})
+        setTasks((prev) =>
+          prev.map((t) => ({ ...t, checked: false, details: "" }))
+        );
+      })
+      .catch((err) => {
+        console.error("Reset failed:", err);
+        toast.error("Failed to reset tasks.", { position: "top-center" });
       });
   };
 
 
+
   return (
     <div className="h-full w-screen">
+      <ToastContainer theme="colored" />
       <form
         onSubmit={handleSubmit}
         className="fixed h-20 w-screen flex items-center justify-center bg-white pt-10 max-md:pt-5 max-md:h-15"
@@ -159,13 +185,19 @@ const Tasks = () => {
           className="text-xl font-bold rounded-md px-2 py-1 text-white bg-emerald-400 hover:bg-emerald-500"
           onClick={handleSave}
         >
-          Save
+          <i class="ri-save-3-line"></i> Save
+        </button>
+        <button
+          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-red-400 hover:bg-red-500 mr-5 max-md:mr-0"
+          onClick={handleReset}
+        >
+          <i class="ri-loop-left-line"></i> Reset
         </button>
         <button
           className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-blue-400 hover:bg-blue-500 mr-5 max-md:mr-0"
           onClick={handlePrint}
         >
-          Print
+          <i class="ri-printer-fill"></i> Print
         </button>
       </div>
     </div>
