@@ -4,6 +4,7 @@ import axios from "axios";
 import TaskList from "../components/TaskList";
 import { ToastContainer, toast } from "react-toastify";
 import DeletePopUp from "../components/DeletePopUp";
+import EditPopUp from "../components/EditPopUp";
 
 const Tasks = () => {
   const { titleId } = useParams();
@@ -12,6 +13,7 @@ const Tasks = () => {
   const [title, setTitle] = useState("");
   const [delPopUp, setDelPopUp] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [editPopUp, setEditPopUp] = useState(false)
   const printRef = useRef(null);
   const Url = import.meta.env.VITE_URL;
   
@@ -147,6 +149,7 @@ const Tasks = () => {
       });
   };
 
+  
 
   return (
     <div className="h-full w-screen">
@@ -161,7 +164,45 @@ const Tasks = () => {
           setDelPopUp={setDelPopUp}
         />
       )}
+      {editPopUp && selectedTask && (
+        <EditPopUp
+          setEditPopUp={setEditPopUp}
+          t={selectedTask}
+          onConfirm={async (updatedText) => {
+            try {
+              const res = await fetch(
+                `${Url}/tasks/${selectedTask._id}`,
+                {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ task: updatedText }),
+                }
+              );
 
+              const data = await res.json();
+
+              if (res.ok) {
+                const updated = tasks.map((task) =>
+                  task._id === selectedTask._id ? data.task : task
+                );
+                setTasks(updated);
+              } else {
+                console.error(
+                  "Error updating task:",
+                  data.message || data.error
+                );
+              }
+            } catch (error) {
+              console.error("Network error:", error.message);
+            } finally {
+              setEditPopUp(false);
+            }
+          }}
+          onCancel={() => setEditPopUp(false)}
+        />
+      )}
       <form
         onSubmit={handleSubmit}
         className="fixed h-20 w-screen flex items-center justify-center bg-white pt-10 max-md:pt-5 max-md:h-15"
@@ -189,6 +230,10 @@ const Tasks = () => {
             setDelPopUp={(task) => {
               setSelectedTask(task);
               setDelPopUp(true);
+            }}
+            setEditPopUp={(task) => {
+              setSelectedTask(task);
+              setEditPopUp(true);
             }}
             key={t._id}
             t={t}

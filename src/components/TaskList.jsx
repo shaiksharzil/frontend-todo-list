@@ -1,6 +1,12 @@
 import React from "react";
 
-const TaskList = ({ t, onCheckChange, onDetailsChange,setDelPopUp }) => {
+const TaskList = ({
+  t,
+  onCheckChange,
+  onDetailsChange,
+  setDelPopUp,
+  setEditPopUp,
+}) => {
   return (
     <div className="flex justify-around mt-5">
       <div className="flex flex-row items-center justify-between gap-2 border-2 border-[#EEEEEE] w-screen px-2 py-1 mx-5 rounded-md text-xl max-md:text-sm max-md:px-1 max-md:py-0.5 max-md:mx-2">
@@ -11,7 +17,16 @@ const TaskList = ({ t, onCheckChange, onDetailsChange,setDelPopUp }) => {
             checked={t.checked || false}
             onChange={(e) => onCheckChange(t._id, e.target.checked)}
           />
-          <p>{t.task}</p>
+          <div className="flex flex-row gap-2">
+            {t.task}{" "}
+            <div className="cursor-pointer"
+              onClick={() => {
+                setEditPopUp(t);
+              }}
+            >
+              <i class="ri-edit-2-fill"></i>
+            </div>
+          </div>
         </div>
         <div className="flex flex-row items-center gap-2">
           <input
@@ -23,7 +38,7 @@ const TaskList = ({ t, onCheckChange, onDetailsChange,setDelPopUp }) => {
           />
           <div
             // onClick={() => handleDelete(t._id)}
-            onClick={()=>setDelPopUp(t)}
+            onClick={() => setDelPopUp(t)}
             className="p-1 text-white bg-red-500 rounded text-xl font-medium cursor-pointer flex justify-center items-center max-md:text-sm max-md:font-light"
           >
             <i class="ri-delete-bin-6-line"></i>
