@@ -188,11 +188,13 @@ const Tasks = () => {
                   task._id === selectedTask._id ? data.task : task
                 );
                 setTasks(updated);
+                toast.success("Task updated successfully")
               } else {
                 console.error(
                   "Error updating task:",
                   data.message || data.error
                 );
+                toast.error("Task failed to update")
               }
             } catch (error) {
               console.error("Network error:", error.message);
