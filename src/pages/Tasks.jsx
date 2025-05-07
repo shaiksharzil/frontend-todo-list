@@ -3,12 +3,15 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import TaskList from "../components/TaskList";
 import { ToastContainer, toast } from "react-toastify";
+import DeletePopUp from "../components/DeletePopUp";
 
 const Tasks = () => {
   const { titleId } = useParams();
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
+  const [delPopUp, setDelPopUp] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
   const printRef = useRef(null);
   const Url = import.meta.env.VITE_URL;
   
@@ -114,11 +117,11 @@ const Tasks = () => {
       .put(`${Url}/tasks/save`, { tasks: updatedTasks })
       .then((res) => {
         console.log("Tasks saved:", res.data);
-        toast.success("Tasks saved successfully!",{position:"top-center"});
+        toast.success("Tasks saved successfully!");
       })
       .catch((err) => {
         console.error("Save failed:", err);
-        toast.error("Failed to save tasks.",{position:"top-center"});
+        toast.error("Failed to save tasks.");
       });
   };
 
@@ -133,22 +136,32 @@ const Tasks = () => {
       .put(`${Url}/tasks/save`, { tasks: resetTasks })
       .then((res) => {
         console.log("Tasks reset:", res.data);
-        toast.warn("Tasks reset successfully!",{position:"top-center"})
+        toast.warn("Tasks reset successfully!")
         setTasks((prev) =>
           prev.map((t) => ({ ...t, checked: false, details: "" }))
         );
       })
       .catch((err) => {
         console.error("Reset failed:", err);
-        toast.error("Failed to reset tasks.", { position: "top-center" });
+        toast.error("Failed to reset tasks.");
       });
   };
 
 
-
   return (
     <div className="h-full w-screen">
-      <ToastContainer theme="colored" />
+      <ToastContainer theme="colored" position="top-center" />
+      {delPopUp && selectedTask && (
+        <DeletePopUp
+          t={selectedTask}
+          handleDelete={(id) => {
+            handleDelete(id);
+            setDelPopUp(false);
+          }}
+          setDelPopUp={setDelPopUp}
+        />
+      )}
+
       <form
         onSubmit={handleSubmit}
         className="fixed h-20 w-screen flex items-center justify-center bg-white pt-10 max-md:pt-5 max-md:h-15"
@@ -173,11 +186,14 @@ const Tasks = () => {
       {Array.isArray(tasks) &&
         tasks.map((t) => (
           <TaskList
+            setDelPopUp={(task) => {
+              setSelectedTask(task);
+              setDelPopUp(true);
+            }}
             key={t._id}
             t={t}
             onCheckChange={handleCheckChange}
             onDetailsChange={handleDetailsChange}
-            handleDelete={handleDelete}
           />
         ))}
       <div className="flex justify-between items-center px-4 py-2">
