@@ -17,7 +17,7 @@ const Nav = (props) => {
       <div className="h-16 w-screen border-b-1 flex justify-between items-center px-6 max-md:px-2 fixed bg-white">
         <Link to={"/"}> 
           <h1 className="text-3xl max-md:text-xl mx-2">
-            <i class="ri-todo-line"></i>{" "}Todo List
+            <i class="ri-todo-line"></i>{" "}ToDo List
           </h1>
         </Link>
         <button

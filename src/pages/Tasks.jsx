@@ -77,6 +77,8 @@ const Tasks = () => {
   const handlePrint = () => {
     const printWindow = window.open("", "PRINT", "width=88");
     const checkedTasks = tasks.filter((t) => t.checked);
+    const now = new Date();
+    const dateTimeString = now.toLocaleString();
 
     if (!printWindow) return;
 
@@ -86,12 +88,14 @@ const Tasks = () => {
           <style>
             body {padding: 20px;}
             ol { padding-left: 20px; }
-            li { margin-bottom: 10px;}
+            li { margin-bottom: 7px;}
             h2 { text-align: center; text-transform: uppercase;}
+            .timestamp { text-align: right; font-size: 12px; color: #555; }
           </style>
         </head>
         <body>
           <h2>${title}</h2>
+          <div class="timestamp">${dateTimeString}</div>
           <hr/>
           <ol>
   ${checkedTasks
