@@ -19,12 +19,13 @@ const TaskList = ({
           />
           <div className="flex flex-row gap-2">
             {t.task}{" "}
-            <div className="cursor-pointer"
+            <div
+              className="cursor-pointer"
               onClick={() => {
                 setEditPopUp(t);
               }}
             >
-              <i class="ri-edit-2-fill"></i>
+              <i className="ri-pencil-fill"></i>
             </div>
           </div>
         </div>
@@ -37,11 +38,10 @@ const TaskList = ({
             onChange={(e) => onDetailsChange(t._id, e.target.value)}
           />
           <div
-            // onClick={() => handleDelete(t._id)}
             onClick={() => setDelPopUp(t)}
             className="p-1 text-white bg-red-500 rounded text-xl font-medium cursor-pointer flex justify-center items-center max-md:text-sm max-md:font-light"
           >
-            <i class="ri-delete-bin-6-line"></i>
+            <i className="ri-delete-bin-6-line"></i>
           </div>
         </div>
       </div>

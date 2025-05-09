@@ -17,12 +17,12 @@ const Nav = (props) => {
       <div className="h-16 w-screen border-b-1 flex justify-between items-center px-6 max-md:px-2 fixed bg-white">
         <Link to={"/"}> 
           <h1 className="text-3xl max-md:text-xl mx-2">
-            <i class="ri-todo-line"></i>{" "}ToDo List
+            <i className="ri-todo-line"></i>{" "}ToDo List
           </h1>
         </Link>
         <button
           onClick={logout}
-          className="bg-red-400 hover:bg-red-500 text-xl px-2 py-1 rounded-md text-white active:scale-95  max-md:text-lg"
+          className="bg-red-400 hover:bg-red-500 text-xl px-2 py-1 rounded-md text-white active:scale-95  max-md:text-lg cursor-pointer"
         >
           Logout
         </button>

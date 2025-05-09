@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TitleCard from "../components/TitleCard";
 import EditPopUp from "../components/EditPopUp";
 import { AuthContext } from "../AuthContext";
@@ -18,14 +18,23 @@ const Home = () => {
   const navigate = useNavigate();
   const { username: contextUsername } = useContext(AuthContext);
   const Url = import.meta.env.VITE_URL;
+  const location = useLocation();
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    const storedUsername = localStorage.getItem("username");
+    if (!token || !storedUsername) {
       navigate("/login");
       return;
     }
+    setUsername(storedUsername);
 
+     if (location.state?.showWelcome) {
+       toast.success(`Welcome ${storedUsername}`);
+       // Remove state so toast doesn't show again on refresh
+       navigate(location.pathname, { replace: true });
+     }
     axios
       .get(`${Url}/`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -39,7 +48,6 @@ const Home = () => {
         navigate("/login");
       });
   }, [navigate]);
-
   const fetchCards = (userId) => {
     axios
       .get(`${Url}/cards/${userId}`)
@@ -119,13 +127,11 @@ const Home = () => {
           className="border-2 border-emerald-400 rounded-l-sm pl-2 h-10 w-60 focus:outline-none max-md:h-8 max-md:w-40"
           required
         />
-        <button className="bg-emerald-400 rounded-r-sm h-10 text-white px-1 max-md:h-8">
+        <button className="bg-emerald-400 rounded-r-sm h-10 text-white px-1 max-md:h-8 cursor-pointer">
           Add title
         </button>
       </form>
-
       <div className="h-20 max-md:h-15"></div>
-
       <div className="flex flex-wrap gap-4 mt-5 mx-9  max-md:pr-36">
         {cards.map((card) => (
           <TitleCard

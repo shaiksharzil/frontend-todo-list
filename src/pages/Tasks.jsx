@@ -222,7 +222,7 @@ const Tasks = () => {
         />
         <button
           type="submit"
-          className="bg-emerald-400 rounded-r-sm h-10 text-white px-1 max-md:h-8"
+          className="bg-emerald-400 rounded-r-sm h-10 text-white px-1 max-md:h-8 cursor-pointer"
         >
           Add Task
         </button>
@@ -249,22 +249,22 @@ const Tasks = () => {
         ))}
       <div className="flex justify-between items-center px-4 py-2">
         <button
-          className="text-xl font-bold rounded-md px-2 py-1 text-white bg-emerald-400 hover:bg-emerald-500"
+          className="text-xl font-bold rounded-md px-2 py-1 text-white bg-emerald-400 hover:bg-emerald-500 cursor-pointer"
           onClick={handleSave}
         >
-          <i class="ri-save-3-line"></i> Save
+          <i className="ri-save-3-line"></i> Save
         </button>
         <button
-          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-red-400 hover:bg-red-500 mr-5 max-md:mr-0"
+          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-red-400 hover:bg-red-500 mr-5 max-md:mr-0 cursor-pointer"
           onClick={handleReset}
         >
-          <i class="ri-loop-left-line"></i> Reset
+          <i className="ri-loop-left-line"></i> Reset
         </button>
         <button
-          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-blue-400 hover:bg-blue-500 mr-5 max-md:mr-0"
+          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-blue-400 hover:bg-blue-500 mr-5 max-md:mr-0 cursor-pointer"
           onClick={handlePrint}
         >
-          <i class="ri-printer-fill"></i> Print
+          <i className="ri-printer-fill"></i> Print
         </button>
       </div>
     </div>

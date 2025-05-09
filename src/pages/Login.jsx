@@ -20,9 +20,10 @@ const Login = () => {
         console.log(res);
         if (res.data.message === "Success") {
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("username", res.data.username);
           login(res.data.username);
           setMessage();
-          navigate("/");
+          navigate("/", { state: { showWelcome: true } });
         } else {
           setMessage(res.data.message);
         }
