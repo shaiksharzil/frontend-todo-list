@@ -9,6 +9,7 @@ const Nav = (props) => {
 
   function logout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
     navigate("/login");
     }
   const { username } = useContext(AuthContext);

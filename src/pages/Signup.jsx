@@ -12,12 +12,35 @@ const Signup = () => {
   const { login } = useContext(AuthContext);
   const Url = import.meta.env.VITE_URL;
 
+  function isStrongPassword(pw) {
+    const minLength = /.{8,}/;
+    const upper = /[A-Z]/;
+    const lower = /[a-z]/;
+    const number = /[0-9]/;
+    const special = /[!@#$%^&*(),.?":{}|<>]/;
+
+    return (
+      minLength.test(pw) &&
+      upper.test(pw) &&
+      lower.test(pw) &&
+      number.test(pw) &&
+      special.test(pw)
+    );
+  }
+  
+
   function handleSubmit(e) {
     e.preventDefault();
+    if (!isStrongPassword(password)) {
+      setMessage(
+        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+      );
+      return;
+    }
     axios
       .post(`${Url}/signup`, { username, password })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data.message == "Success") {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("username", res.data.username);
@@ -56,7 +79,7 @@ const Signup = () => {
               required
             />
           </div>
-          <p className="text-sm text-center text-red-500 mb-1">{message}</p>
+          <p className="text-sm text-red-500 mb-1">{message}</p>
           <button
             type="submit"
             className="bg-emerald-400 w-full rounded-md h-8 hover:bg-emerald-500 active:scale-95 font-medium text-xl text-white mb-2"

@@ -17,7 +17,7 @@ const Login = () => {
     axios
       .post(`${Url}/login`, { username, password })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.data.message === "Success") {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("username", res.data.username);

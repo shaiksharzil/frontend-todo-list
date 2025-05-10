@@ -109,7 +109,11 @@ const Tasks = () => {
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
-    printWindow.close();
+
+    const isDesktop = !/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    if (isDesktop) {
+      printWindow.close();
+    }
   };
 
   const handleSave = () => {
@@ -122,7 +126,7 @@ const Tasks = () => {
     axios
       .put(`${Url}/tasks/save`, { tasks: updatedTasks })
       .then((res) => {
-        console.log("Tasks saved:", res.data);
+        // console.log("Tasks saved:", res.data);
         toast.success("Tasks saved successfully!");
       })
       .catch((err) => {
@@ -141,7 +145,7 @@ const Tasks = () => {
     axios
       .put(`${Url}/tasks/save`, { tasks: resetTasks })
       .then((res) => {
-        console.log("Tasks reset:", res.data);
+        // console.log("Tasks reset:", res.data);
         toast.warn("Tasks reset successfully!")
         setTasks((prev) =>
           prev.map((t) => ({ ...t, checked: false, details: "" }))
@@ -174,16 +178,13 @@ const Tasks = () => {
           t={selectedTask}
           onConfirm={async (updatedText) => {
             try {
-              const res = await fetch(
-                `${Url}/tasks/${selectedTask._id}`,
-                {
-                  method: "PUT",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ task: updatedText }),
-                }
-              );
+              const res = await fetch(`${Url}/tasks/${selectedTask._id}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ task: updatedText }),
+              });
 
               const data = await res.json();
 
@@ -192,13 +193,13 @@ const Tasks = () => {
                   task._id === selectedTask._id ? data.task : task
                 );
                 setTasks(updated);
-                toast.success("Task updated successfully")
+                toast.success("Task updated successfully");
               } else {
                 console.error(
                   "Error updating task:",
                   data.message || data.error
                 );
-                toast.error("Task failed to update")
+                toast.error("Task failed to update");
               }
             } catch (error) {
               console.error("Network error:", error.message);

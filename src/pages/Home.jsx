@@ -32,7 +32,7 @@ const Home = () => {
     setUsername(storedUsername);
 
      if (location.state?.showWelcome) {
-       toast.success(`Welcome ${storedUsername} 👋`);
+       toast.success(`Welcome ${storedUsername}`);
        // Remove state so toast doesn't show again on refresh
        navigate(location.pathname, { replace: true });
      }
