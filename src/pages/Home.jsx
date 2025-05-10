@@ -19,6 +19,7 @@ const Home = () => {
   const { username: contextUsername } = useContext(AuthContext);
   const Url = import.meta.env.VITE_URL;
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const Home = () => {
     setUsername(storedUsername);
 
      if (location.state?.showWelcome) {
-       toast.success(`Welcome ${storedUsername}`);
+       toast.success(`Welcome ${storedUsername} 👋`);
        // Remove state so toast doesn't show again on refresh
        navigate(location.pathname, { replace: true });
      }
@@ -40,14 +41,19 @@ const Home = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        setUsername(res.data.username);
-        fetchCards(res.data.username);
+        const validUsername = res.data.username || storedUsername;
+        setUsername(validUsername);
+        fetchCards(validUsername);
       })
       .catch((err) => {
         console.log(err);
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
         navigate("/login");
-      });
+      })
+      .finally(() => setLoading(false));
   }, [navigate]);
+  
   const fetchCards = (userId) => {
     axios
       .get(`${Url}/cards/${userId}`)
