@@ -23,7 +23,7 @@ const Nav = (props) => {
         </Link>
         <button
           onClick={logout}
-          className="bg-red-400 hover:bg-red-500 text-xl px-2 py-1 rounded-md text-white active:scale-95  max-md:text-lg cursor-pointer"
+          className="bg-red-500 hover:bg-red-400 text-xl px-2 py-1 rounded-md text-white active:scale-95  max-md:text-lg cursor-pointer"
         >
           Logout
         </button>

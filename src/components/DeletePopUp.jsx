@@ -5,7 +5,7 @@ const DeletePopUp = ({t, handleDelete, setDelPopUp}) => {
       <div className="flex justify-center items-center w-screen h-screen fixed top-0 left-0 bg-[#00000070] z-50">
         <div className="fixed  bg-white  w-90 rounded-md mx-4 flex flex-col">
           <div className="mx-3 my-4 px-2 rounded-sm">
-            <h3 className="text-xl max-md:text-lg">
+            <h3 className="text-xl max-md:text-lg break-words">
               Are you sure you want to delete <strong>{t.task}</strong>?
             </h3>
           </div>

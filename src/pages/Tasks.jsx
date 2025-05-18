@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import DeletePopUp from "../components/DeletePopUp";
 import EditPopUp from "../components/EditPopUp";
 import { motion, useScroll } from "motion/react";
+import TaskNothing from "../components/TaskNothing";
+
 
 const Tasks = () => {
   const { titleId } = useParams();
@@ -238,10 +240,10 @@ const Tasks = () => {
       </form>
 
       <div className="h-20 max-md:h-15"></div>
-      <h2 className="text-center mt-5 font-bold text-4xl text-gray-600 underline max-md:text-2xl">
+      <h2 className="text-center mx-5 mt-5 font-bold text-4xl uppercase text-gray-600 underline max-md:text-2xl">
         {title}
       </h2>
-      {Array.isArray(tasks) &&
+      {Array.isArray(tasks) && tasks.length > 0 ? (
         tasks.map((t) => (
           <TaskList
             setDelPopUp={(task) => {
@@ -257,22 +259,26 @@ const Tasks = () => {
             onCheckChange={handleCheckChange}
             onDetailsChange={handleDetailsChange}
           />
-        ))}
+        ))
+      ) : (
+        <TaskNothing />
+      )}
+
       <div className="flex justify-between items-center px-4 py-2">
         <button
-          className="text-xl font-bold rounded-md px-2 py-1 text-white bg-emerald-400 hover:bg-emerald-500 cursor-pointer"
+          className="text-xl font-bold rounded-md px-2 py-1 text-white bg-emerald-500 hover:bg-emerald-400 cursor-pointer"
           onClick={handleSave}
         >
           <i className="ri-save-3-line"></i> Save
         </button>
         <button
-          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-red-400 hover:bg-red-500 mr-5 max-md:mr-0 cursor-pointer"
+          className="text-xl font-bold rounded-md px-2 py-1 text-white bg-red-500 hover:bg-red-400  mr-5 max-md:mr-0 cursor-pointer"
           onClick={handleReset}
         >
           <i className="ri-loop-left-line"></i> Reset
         </button>
         <button
-          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-blue-400 hover:bg-blue-500 mr-5 max-md:mr-0 cursor-pointer"
+          className="text-xl  font-bold rounded-md px-2 py-1 text-white bg-blue-500 hover:bg-blue-400 mr-5 max-md:mr-0 cursor-pointer"
           onClick={handlePrint}
         >
           <i className="ri-printer-fill"></i> Print

@@ -7,6 +7,7 @@ import { AuthContext } from "../AuthContext";
 import DeletePopUp from "../components/DeletePopUp";
 import { ToastContainer, toast } from "react-toastify";
 import { motion, useScroll } from "motion/react";
+import TitleNothing from "../components/TitleNothing";
 
 const Home = () => {
   const [username, setUsername] = useState("");
@@ -134,30 +135,37 @@ const Home = () => {
       >
         <input
           type="text"
-          placeholder="Enter title name"
+          placeholder="New title"
           value={titleInput}
           onChange={(e) => setTitleInput(e.target.value)}
           className="border-2 border-emerald-400 rounded-l-sm pl-2 h-10 w-60 focus:outline-none max-md:h-8 max-md:w-40"
           required
         />
         <button className="bg-emerald-400 rounded-r-sm h-10 text-white px-1 max-md:h-8 cursor-pointer">
-          Add title
+          Create
         </button>
       </form>
       <div className="h-20 max-md:h-15"></div>
-      <div className="flex flex-wrap gap-4 mt-5 mx-9  max-md:pr-36">
-        {cards.map((card) => (
-          <TitleCard
-            key={card._id}
-            card={card}
-            onEdit={handleEditClick}
-            onDelete={(card) => {
-              setSelectedCard(card);
-              setDelPopUp(true);
-            }}
-          />
-        ))}
-      </div>
+      {loading ? null : cards.length === 0 ? (
+        <div className="flex justify-center items-center h-[calc(100vh-120px)]">
+          <TitleNothing />
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-4 mt-5 mx-9 max-md:pr-36">
+          {cards.map((card) => (
+            <TitleCard
+              key={card._id}
+              card={card}
+              onEdit={handleEditClick}
+              onDelete={(card) => {
+                setSelectedCard(card);
+                setDelPopUp(true);
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       {editPopUp && selectedCard && (
         <EditPopUp
           t={{ task: selectedCard.title }}
