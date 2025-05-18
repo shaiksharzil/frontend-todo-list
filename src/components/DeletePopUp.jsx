@@ -12,13 +12,13 @@ const DeletePopUp = ({t, handleDelete, setDelPopUp}) => {
           <div className="flex justify-end mt-5 gap-4 mr-2 mb-4">
             <button
               onClick={() => setDelPopUp(false)}
-              className="bg-emerald-400 text-white rounded-md px-3 py-0.5 text-lg hover:bg-emerald-500 active:scale-90"
+              className="bg-emerald-500 text-white rounded-md px-3 py-0.5 text-lg hover:bg-emerald-400 active:scale-90 cursor-pointer"
             >
               No
             </button>
             <button
               onClick={() => handleDelete(t._id)}
-              className="bg-red-400 rounded-md text-white px-3 py-0.5 text-lg hover:bg-red-500 active:scale-90"
+              className="bg-red-500 rounded-md text-white px-3 py-0.5 text-lg hover:bg-red-400 active:scale-90 cursor-pointer"
             >
               Yes
             </button>
