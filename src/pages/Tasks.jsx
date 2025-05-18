@@ -5,6 +5,7 @@ import TaskList from "../components/TaskList";
 import { ToastContainer, toast } from "react-toastify";
 import DeletePopUp from "../components/DeletePopUp";
 import EditPopUp from "../components/EditPopUp";
+import { motion, useScroll } from "motion/react";
 
 const Tasks = () => {
   const { titleId } = useParams();
@@ -16,6 +17,7 @@ const Tasks = () => {
   const [editPopUp, setEditPopUp] = useState(false)
   const printRef = useRef(null);
   const Url = import.meta.env.VITE_URL;
+  const scrollYProgress = useScroll().scrollYProgress;
   
   useEffect(() => {
     axios
@@ -161,6 +163,12 @@ const Tasks = () => {
 
   return (
     <div className="h-full w-screen">
+      <motion.div
+        style={{
+          scaleX: scrollYProgress,
+        }}
+        className="h-1 w-screen fixed left-0 top-0 bg-emerald-400 origin-left"
+      ></motion.div>
       <ToastContainer theme="colored" position="top-center" />
       {delPopUp && selectedTask && (
         <DeletePopUp
@@ -230,7 +238,9 @@ const Tasks = () => {
       </form>
 
       <div className="h-20 max-md:h-15"></div>
-
+      <h2 className="text-center mt-5 font-bold text-4xl text-gray-600 underline max-md:text-2xl">
+        {title}
+      </h2>
       {Array.isArray(tasks) &&
         tasks.map((t) => (
           <TaskList

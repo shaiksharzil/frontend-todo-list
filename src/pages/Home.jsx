@@ -6,6 +6,7 @@ import EditPopUp from "../components/EditPopUp";
 import { AuthContext } from "../AuthContext";
 import DeletePopUp from "../components/DeletePopUp";
 import { ToastContainer, toast } from "react-toastify";
+import { motion, useScroll } from "motion/react";
 
 const Home = () => {
   const [username, setUsername] = useState("");
@@ -20,6 +21,7 @@ const Home = () => {
   const Url = import.meta.env.VITE_URL;
   const location = useLocation();
   const [loading, setLoading] = useState(true);
+  const scrollYProgress = useScroll().scrollYProgress;
 
 
   useEffect(() => {
@@ -31,11 +33,11 @@ const Home = () => {
     }
     setUsername(storedUsername);
 
-     if (location.state?.showWelcome) {
-       toast.success(`Welcome ${storedUsername}`);
-       // Remove state so toast doesn't show again on refresh
-       navigate(location.pathname, { replace: true });
-     }
+    if (location.state?.showWelcome) {
+      toast.success(`Welcome ${storedUsername}`);
+      // Remove state so toast doesn't show again on refresh
+      navigate(location.pathname, { replace: true });
+    }
     axios
       .get(`${Url}/`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -53,7 +55,7 @@ const Home = () => {
       })
       .finally(() => setLoading(false));
   }, [navigate]);
-  
+
   const fetchCards = (userId) => {
     axios
       .get(`${Url}/cards/${userId}`)
@@ -93,7 +95,7 @@ const Home = () => {
             card._id === selectedCard._id ? { ...card, title: newTitle } : card
           )
         );
-        toast.success("Title Updated successfully")
+        toast.success("Title Updated successfully");
         setEditPopUp(false);
         setSelectedCard(null);
       })
@@ -117,9 +119,14 @@ const Home = () => {
     }
   };
 
-
   return (
     <div className="h-full w-screen">
+      <motion.div
+        style={{
+          scaleX: scrollYProgress,
+        }}
+        className="h-1 w-screen fixed left-0 top-0 bg-emerald-400 origin-left"
+      ></motion.div>
       <ToastContainer theme="colored" position="top-center" />
       <form
         onSubmit={handleAddTitle}
