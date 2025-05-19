@@ -13,7 +13,7 @@ const TaskList = ({
         <div className="flex flex-row items-center gap-2">
           <input
             type="checkbox"
-            className="h-5 w-5 accent-black  cursor-pointer"
+            className="h-5 w-5 accent-zinc-700  cursor-pointer"
             checked={t.checked || false}
             onChange={(e) => onCheckChange(t._id, e.target.checked)}
           />
@@ -25,7 +25,7 @@ const TaskList = ({
                 setEditPopUp(t);
               }}
             >
-              <i className="ri-pencil-fill"></i>
+              <i className="ri-pencil-fill text-gray-500"></i>
             </div>
           </div>
         </div>

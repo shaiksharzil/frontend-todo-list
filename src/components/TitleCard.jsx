@@ -10,7 +10,7 @@ const TitleCard = ({ card, onEdit, onDelete }) => {
             className="group w-1/2 border-r-1  flex flex-row justify-center items-center gap-1 py-2 cursor-pointer"
             onClick={() => onEdit(card)}
           >
-            <i className="ri-pencil-fill text-blue-400 transform transition-transform duration-500 group-hover:rotate-360"></i>
+            <i className="ri-pencil-fill text-emerald-400 transform transition-transform duration-500 group-hover:rotate-360"></i>
             <p>Edit</p>
           </div>
           <div

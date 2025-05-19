@@ -169,7 +169,7 @@ const Tasks = () => {
         style={{
           scaleX: scrollYProgress,
         }}
-        className="h-1 w-screen fixed left-0 top-0 bg-emerald-400 origin-left"
+        className="h-1 w-screen fixed left-0 top-0 bg-gradient-to-r from-[#EEEEEE] to-gray-500 origin-left"
       ></motion.div>
       <ToastContainer theme="colored" position="top-center" />
       {delPopUp && selectedTask && (
@@ -240,8 +240,9 @@ const Tasks = () => {
       </form>
 
       <div className="h-20 max-md:h-15"></div>
-      <h2 className="text-center mx-5 mt-5 font-bold text-4xl uppercase text-gray-600 underline max-md:text-2xl">
+      <h2 className="mx-5 mt-5 font-bold text-4xl break-words uppercase text-gray-600  max-md:text-2xl">
         {title}
+        <i class="ri-corner-right-down-line"></i>
       </h2>
       {Array.isArray(tasks) && tasks.length > 0 ? (
         tasks.map((t) => (

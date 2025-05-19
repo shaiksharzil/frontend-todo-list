@@ -126,7 +126,7 @@ const Home = () => {
         style={{
           scaleX: scrollYProgress,
         }}
-        className="h-1 w-screen fixed left-0 top-0 bg-emerald-400 origin-left"
+        className="h-1 w-screen fixed left-0 top-0 bg-gradient-to-r from-[#EEEEEE] to-gray-500 origin-left"
       ></motion.div>
       <ToastContainer theme="colored" position="top-center" />
       <form
