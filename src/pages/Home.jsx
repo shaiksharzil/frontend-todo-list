@@ -141,7 +141,7 @@ const Home = () => {
           className="border-2 border-emerald-400 rounded-l-sm pl-2 h-10 w-60 focus:outline-none max-md:h-8 max-md:w-40"
           required
         />
-        <button className="bg-emerald-400 rounded-r-sm h-10 text-white px-1 max-md:h-8 cursor-pointer">
+        <button className="bg-emerald-400 rounded-r-sm h-10 text-white px-2 max-md:h-8 cursor-pointer">
           Create
         </button>
       </form>

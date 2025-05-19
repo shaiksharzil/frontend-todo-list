@@ -233,7 +233,7 @@ const Tasks = () => {
         />
         <button
           type="submit"
-          className="bg-emerald-400 rounded-r-sm h-10 text-white px-1 max-md:h-8 cursor-pointer"
+          className="bg-emerald-400 rounded-r-sm h-10 text-white px-2 max-md:h-8 cursor-pointer"
         >
           Add Task
         </button>

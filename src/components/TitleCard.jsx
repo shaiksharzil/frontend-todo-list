@@ -23,13 +23,13 @@ const TitleCard = ({ card, onEdit, onDelete }) => {
         </div>
         <div className="h-full">
           <div className="flex justify-around items-center h-full flex-col px-4 text-center">
-            <h3 className="text-2xl font-semibold mt-4 mb-2 break-words w-full">
+            <h3 className="uppercase text-2xl font-extralight mt-4 mb-2 break-words w-full bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent">
               {card.title}
             </h3>
             <Link to={`/tasks/${card._id}`} className="w-full">
-              <button className="flex group justify-center gap-1 border-2 bg-black text-white w-full py-1 my-2 text-xl rounded-md active:scale-95 duration-300 cursor-pointer hover:bg-white hover:text-black">
+              <button className="flex group justify-center gap-1 bg-gradient-to-r from-[#485563] to-[#29323c] text-white w-full py-1 my-2 text-xl rounded-md active:scale-95 duration-300 cursor-pointer hover:bg-gradient-to-l">
                 <p>Tasks</p>
-                <i className="ri-arrow-right-line transform transition-transform duration-200 group-hover:translate-x-1"></i>
+                <i className="ri-arrow-right-line transform transition-transform duration-300 group-hover:translate-x-1.5"></i>
               </button>
             </Link>
           </div>

@@ -16,9 +16,9 @@ const Nav = (props) => {
   return (
     <div>
       <div className="h-16 w-screen border-b-1 flex justify-between items-center px-6 max-md:px-2 fixed bg-white">
-        <Link to={"/"}> 
-          <h1 className="text-3xl max-md:text-xl mx-2">
-            <i className="ri-todo-line"></i>{" "}ToDo List
+        <Link to={"/"}>
+          <h1 className="text-3xl max-md:text-xl mx-2 bg-gradient-to-tr from-[#bdc3c7]  to-[#2c3e50] bg-clip-text text-transparent">
+            <i className="ri-todo-line"></i> ToDo List
           </h1>
         </Link>
         <button
