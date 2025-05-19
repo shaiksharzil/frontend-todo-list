@@ -240,7 +240,7 @@ const Tasks = () => {
       </form>
 
       <div className="h-20 max-md:h-15"></div>
-      <h2 className="mx-5 mt-5 font-bold text-4xl break-words uppercase text-gray-600  max-md:text-2xl">
+      <h2 className="mx-5 mt-5 font-bold bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent text-4xl break-words uppercase max-md:text-2xl">
         {title}
         <i class="ri-corner-right-down-line"></i>
       </h2>
