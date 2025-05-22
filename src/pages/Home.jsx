@@ -8,6 +8,7 @@ import DeletePopUp from "../components/DeletePopUp";
 import { ToastContainer, toast } from "react-toastify";
 import { motion, useScroll } from "motion/react";
 import TitleNothing from "../components/TitleNothing";
+import Loader from "../components/Loader";
 
 const Home = () => {
   const [username, setUsername] = useState("");
@@ -26,82 +27,90 @@ const Home = () => {
 
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUsername = localStorage.getItem("username");
-    if (!token || !storedUsername) {
-      navigate("/login");
-      return;
-    }
-    setUsername(storedUsername);
+    const initialize = async () => {
+      const token = localStorage.getItem("token");
+      const storedUsername = localStorage.getItem("username");
+      if (!token || !storedUsername) {
+        navigate("/login");
+        return;
+      }
+      setUsername(storedUsername);
 
-    if (location.state?.showWelcome) {
-      toast.success(`Welcome ${storedUsername}`);
-      // Remove state so toast doesn't show again on refresh
-      navigate(location.pathname, { replace: true });
-    }
-    axios
-      .get(`${Url}/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
+      if (location.state?.showWelcome) {
+        toast.success(`Welcome ${storedUsername}`);
+        navigate(location.pathname, { replace: true });
+      }
+
+      try {
+        const res = await axios.get(`${Url}/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const validUsername = res.data.username || storedUsername;
         setUsername(validUsername);
-        fetchCards(validUsername);
-      })
-      .catch((err) => {
+        await fetchCards(validUsername);
+      } catch (err) {
         console.log(err);
         localStorage.removeItem("token");
         localStorage.removeItem("username");
         navigate("/login");
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initialize();
   }, [navigate]);
+  
 
-  const fetchCards = (userId) => {
-    axios
-      .get(`${Url}/cards/${userId}`)
-      .then((res) => setCards(res.data))
-      .catch((err) => console.log(err));
+  const fetchCards = async (userId) => {
+    try {
+      const res = await axios.get(`${Url}/cards/${userId}`);
+      setCards(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
+  
 
-  const handleAddTitle = (e) => {
+  const handleAddTitle = async (e) => {
     e.preventDefault();
     if (!titleInput.trim()) return;
 
-    axios
-      .post(`${Url}/addcard`, {
+    try {
+      const res = await axios.post(`${Url}/addcard`, {
         userId: username,
         title: titleInput,
-      })
-      .then((res) => {
-        setCards((prev) => [...prev, res.data]); // Show new card immediately
-        toast.success("New title successfully added");
-        setTitleInput("");
-      })
-      .catch((err) => console.log(err));
+      });
+      setCards((prev) => [...prev, res.data]);
+      toast.success("New title successfully added");
+      setTitleInput("");
+    } catch (err) {
+      console.log(err);
+    }
   };
+  
 
   const handleEditClick = (card) => {
     setSelectedCard(card);
     setEditPopUp(true);
   };
 
-  const handleEditConfirm = (newTitle) => {
-    axios
-      .put(`${Url}/cards/${selectedCard._id}`, { title: newTitle })
-      .then((res) => {
-        // Update cards state with new title
-        setCards((prevCards) =>
-          prevCards.map((card) =>
-            card._id === selectedCard._id ? { ...card, title: newTitle } : card
-          )
-        );
-        toast.success("Title Updated successfully");
-        setEditPopUp(false);
-        setSelectedCard(null);
-      })
-      .catch((err) => console.log(err));
+  const handleEditConfirm = async (newTitle) => {
+    try {
+      await axios.put(`${Url}/cards/${selectedCard._id}`, { title: newTitle });
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card._id === selectedCard._id ? { ...card, title: newTitle } : card
+        )
+      );
+      toast.success("Title Updated successfully");
+      setEditPopUp(false);
+      setSelectedCard(null);
+    } catch (err) {
+      console.log(err);
+    }
   };
+  
 
   const handleEditCancel = () => {
     setEditPopUp(false);
@@ -146,7 +155,9 @@ const Home = () => {
         </button>
       </form>
       <div className="h-20 max-md:h-15"></div>
-      {loading ? null : cards.length === 0 ? (
+      {loading ? (
+        <Loader />
+      ) : cards.length === 0 ? (
         <div className="flex justify-center items-center h-[calc(100vh-120px)]">
           <TitleNothing />
         </div>

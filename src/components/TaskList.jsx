@@ -25,7 +25,7 @@ const TaskList = ({
                 setEditPopUp(t);
               }}
             >
-              <i className="ri-pencil-fill text-gray-500"></i>
+              <i className="ri-pencil-fill bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent"></i>
             </div>
           </div>
         </div>

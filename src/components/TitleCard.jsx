@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 const TitleCard = ({ card, onEdit, onDelete }) => {
   return (
     <div>
-      <div className="flex flex-col  w-70 border-2  rounded-md max-md:w-80">
-        <div className="flex flex-row border-b-2  font-medium">
+      <div className="flex flex-col  w-70 border-2 border-gray-500 rounded-md max-md:w-80">
+        <div className="flex flex-row border-b-2 border-gray-500  font-medium">
           <div
-            className="group w-1/2 border-r-1  flex flex-row justify-center items-center gap-1 py-2 cursor-pointer"
+            className="group w-1/2 border-r-1 border-gray-500  flex flex-row justify-center items-center gap-1 py-2 cursor-pointer"
             onClick={() => onEdit(card)}
           >
             <i className="ri-pencil-fill bg-gradient-to-b from-emerald-500 to-white bg-clip-text text-transparent transform transition-transform duration-500 group-hover:rotate-360"></i>
@@ -16,7 +16,7 @@ const TitleCard = ({ card, onEdit, onDelete }) => {
             </p>
           </div>
           <div
-            className=" group w-1/2 border-l-1  flex flex-row justify-center items-center gap-1 cursor-pointer"
+            className=" group w-1/2 border-l-1 border-gray-500   flex flex-row justify-center items-center gap-1 cursor-pointer"
             onClick={() => onDelete(card)}
           >
             <i className="ri-delete-bin-6-line bg-gradient-to-b from-red-500 to-white bg-clip-text text-transparent transform transition-transform duration-200 group-hover:-rotate-12"></i>

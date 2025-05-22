@@ -7,7 +7,7 @@ import DeletePopUp from "../components/DeletePopUp";
 import EditPopUp from "../components/EditPopUp";
 import { motion, useScroll } from "motion/react";
 import TaskNothing from "../components/TaskNothing";
-
+import Loader from "../components/Loader";
 
 const Tasks = () => {
   const { titleId } = useParams();
@@ -16,66 +16,102 @@ const Tasks = () => {
   const [title, setTitle] = useState("");
   const [delPopUp, setDelPopUp] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [editPopUp, setEditPopUp] = useState(false)
+  const [editPopUp, setEditPopUp] = useState(false);
   const printRef = useRef(null);
   const Url = import.meta.env.VITE_URL;
   const scrollYProgress = useScroll().scrollYProgress;
-  
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    axios
-      .get(`${Url}/tasks/${titleId}`)
-      .then((res) => {
+    setIsLoading(true);
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${Url}/tasks/${titleId}`);
         if (Array.isArray(res.data)) {
           const formatted = res.data.map((t) => ({
             ...t,
             checked: t.checked || false,
-            details: t.inputValue || "", // Show saved input value
+            details: t.inputValue || "",
           }));
           setTasks(formatted);
         } else {
           console.error("Expected array, got:", res.data);
           setTasks([]);
         }
-      })
-      .catch((err) => {
-        console.error("Error fetching tasks:", err);
-        setTasks([]);
-      });
 
-    axios.get(`${Url}/card/${titleId}`).then((res) => {
-      setTitle(res.data.title);
-    });
+        const cardRes = await axios.get(`${Url}/card/${titleId}`);
+        setTitle(cardRes.data.title);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setTasks([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [titleId]);
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.post(`${Url}/tasks`, { titleId, task }).then((res) => {
+    try {
+      const res = await axios.post(`${Url}/tasks`, { titleId, task });
       setTasks((prev) => [
         ...prev,
         { ...res.data, checked: false, details: "" },
       ]);
       toast.success("New task successfully added");
       setTask("");
-    });
+    } catch (err) {
+      console.error("Error adding task:", err);
+      toast.error("Failed to add task.");
+    }
   };
 
-  const handleCheckChange = (id, checked) => {
-    setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, checked } : t)));
+  const handleDelete = async (taskId) => {
+    try {
+      await axios.delete(`${Url}/tasks/${taskId}`);
+      setTasks((prev) => prev.filter((t) => t._id !== taskId));
+      toast.warn("Task deleted successfully");
+    } catch (err) {
+      console.error("Delete failed:", err);
+      toast.error("Failed to delete task.");
+    }
   };
 
-  const handleDetailsChange = (id, details) => {
-    setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, details } : t)));
+  const handleSave = async () => {
+    const updatedTasks = tasks.map((t) => ({
+      _id: t._id,
+      checked: t.checked,
+      details: t.details || "",
+    }));
+
+    try {
+      await axios.put(`${Url}/tasks/save`, { tasks: updatedTasks });
+      toast.success("Tasks saved successfully!");
+    } catch (err) {
+      console.error("Save failed:", err);
+      toast.error("Failed to save tasks.");
+    }
   };
 
-  const handleDelete = (taskId) => {
-    axios
-      .delete(`${Url}/tasks/${taskId}`)
-      .then(() => {
-        setTasks((prevTasks) => prevTasks.filter((t) => t._id !== taskId));
-        toast.warn("Task deleted successfully")
-      })
-      .catch((err) => console.error("Delete failed:", err));
+  const handleReset = async () => {
+    const resetTasks = tasks.map((t) => ({
+      _id: t._id,
+      checked: false,
+      details: "",
+    }));
+
+    try {
+      await axios.put(`${Url}/tasks/save`, { tasks: resetTasks });
+      toast.warn("Tasks reset successfully!");
+      setTasks((prev) =>
+        prev.map((t) => ({ ...t, checked: false, details: "" }))
+      );
+    } catch (err) {
+      console.error("Reset failed:", err);
+      toast.error("Failed to reset tasks.");
+    }
   };
 
   const handlePrint = () => {
@@ -102,14 +138,17 @@ const Tasks = () => {
           <div class="timestamp">${dateTimeString}</div>
           <hr/>
           <ol>
-  ${checkedTasks
-    .map((t) => `<li>${t.details ? `${t.task} - ${t.details}` : t.task}</li>`)
-    .join("")}
-</ol>
-          <br/>
+            ${checkedTasks
+              .map(
+                (t) =>
+                  `<li>${t.details ? `${t.task} - ${t.details}` : t.task}</li>`
+              )
+              .join("")}
+          </ol>
         </body>
       </html>
     `);
+
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
@@ -120,57 +159,20 @@ const Tasks = () => {
     }
   };
 
-  const handleSave = () => {
-    const updatedTasks = tasks.map((t) => ({
-      _id: t._id,
-      checked: t.checked,
-      details: t.details || "", // details is used in frontend
-    }));
-
-    axios
-      .put(`${Url}/tasks/save`, { tasks: updatedTasks })
-      .then((res) => {
-        // console.log("Tasks saved:", res.data);
-        toast.success("Tasks saved successfully!");
-      })
-      .catch((err) => {
-        console.error("Save failed:", err);
-        toast.error("Failed to save tasks.");
-      });
+  const handleCheckChange = (id, checked) => {
+    setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, checked } : t)));
   };
 
-  const handleReset = () => {
-    const resetTasks = tasks.map((t) => ({
-      _id: t._id,
-      checked: false,
-      details: "",
-    }));
-
-    axios
-      .put(`${Url}/tasks/save`, { tasks: resetTasks })
-      .then((res) => {
-        // console.log("Tasks reset:", res.data);
-        toast.warn("Tasks reset successfully!")
-        setTasks((prev) =>
-          prev.map((t) => ({ ...t, checked: false, details: "" }))
-        );
-      })
-      .catch((err) => {
-        console.error("Reset failed:", err);
-        toast.error("Failed to reset tasks.");
-      });
+  const handleDetailsChange = (id, details) => {
+    setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, details } : t)));
   };
-
-  
 
   return (
     <div className="h-full w-screen">
       <motion.div
-        style={{
-          scaleX: scrollYProgress,
-        }}
+        style={{ scaleX: scrollYProgress }}
         className="h-1 w-screen fixed left-0 top-0 bg-gradient-to-r from-[#EEEEEE] to-gray-500 origin-left"
-      ></motion.div>
+      />
       <ToastContainer theme="colored" position="top-center" />
       {delPopUp && selectedTask && (
         <DeletePopUp
@@ -242,9 +244,11 @@ const Tasks = () => {
       <div className="h-20 max-md:h-15"></div>
       <h2 className="mx-5 mt-5 font-bold bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent text-4xl break-words uppercase max-md:text-2xl">
         {title}
-        <i class="ri-corner-right-down-line"></i>
       </h2>
-      {Array.isArray(tasks) && tasks.length > 0 ? (
+
+      {isLoading ? (
+        <Loader/>
+      ) : tasks.length > 0 ? (
         tasks.map((t) => (
           <TaskList
             setDelPopUp={(task) => {

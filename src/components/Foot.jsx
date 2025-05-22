@@ -2,7 +2,7 @@ import React from "react";
 
 const Foot = () => {
   return (
-    <footer className="h-20 mt-5 w-full border-t-1 text-center">
+    <footer className="h-20 mt-5 w-full border-t-1 border-gray-500 text-center">
       <div className="h-1/2 flex justify-center items-center">
         <h4>
           Made by{" "}
