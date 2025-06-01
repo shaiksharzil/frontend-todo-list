@@ -21,6 +21,8 @@ const Tasks = () => {
   const Url = import.meta.env.VITE_URL;
   const scrollYProgress = useScroll().scrollYProgress;
   const [isLoading, setIsLoading] = useState(true);
+  const [lastSaved, setLastSaved] = useState("");
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -80,6 +82,9 @@ const Tasks = () => {
   };
 
   const handleSave = async () => {
+    const now = new Date();
+    const time = now.toLocaleString();
+    setLastSaved(new Date().toLocaleString());
     const updatedTasks = tasks.map((t) => ({
       _id: t._id,
       checked: t.checked,
@@ -87,7 +92,7 @@ const Tasks = () => {
     }));
 
     try {
-      await axios.put(`${Url}/tasks/save`, { tasks: updatedTasks });
+      await axios.put(`${Url}/tasks/save`, { tasks: updatedTasks, time });
       toast.success("Tasks saved successfully!");
     } catch (err) {
       console.error("Save failed:", err);
@@ -242,12 +247,15 @@ const Tasks = () => {
       </form>
 
       <div className="h-20 max-md:h-15"></div>
-      <h2 className="mx-5 mt-5 font-bold bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent text-4xl break-words uppercase max-md:text-2xl">
-        {title}
-      </h2>
+      <div className="flex items-end justify-between mx-2">
+        <h2 className="mt-5 font-bold bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent text-4xl break-words uppercase max-md:text-2xl">
+          {title}
+        </h2>
+        <h4 className="text-gray-500 text-sm pr-3 max-md:pr-0">Last Saved:{lastSaved}</h4>
+      </div>
 
       {isLoading ? (
-        <Loader/>
+        <Loader />
       ) : tasks.length > 0 ? (
         tasks.map((t) => (
           <TaskList

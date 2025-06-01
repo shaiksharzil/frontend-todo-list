@@ -7,6 +7,9 @@ const TaskList = ({
   setDelPopUp,
   setEditPopUp,
 }) => {
+  function sound() {
+    speechSynthesis.speak(new SpeechSynthesisUtterance(t.task))
+  }
   return (
     <div className="flex justify-around mt-5">
       <div className="flex flex-row items-center justify-between gap-2 border-2 border-[#EEEEEE] w-screen px-2 py-1 mx-5 rounded-md text-xl max-md:text-sm max-md:px-1 max-md:py-0.5 max-md:mx-2">
@@ -19,6 +22,10 @@ const TaskList = ({
           />
           <div className="flex flex-row gap-2">
             {t.task}{" "}
+            <i
+              onClick={sound}
+              className="ri-volume-up-fill bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent cursor-pointer mr-1"
+            ></i>
             <div
               className="cursor-pointer"
               onClick={() => {
