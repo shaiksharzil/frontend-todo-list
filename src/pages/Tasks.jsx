@@ -24,6 +24,7 @@ const Tasks = () => {
   const [lastSaved, setLastSaved] = useState("");
 
 
+
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
@@ -34,6 +35,7 @@ const Tasks = () => {
             ...t,
             checked: t.checked || false,
             details: t.inputValue || "",
+            time: t.time,
           }));
           setTasks(formatted);
         } else {
@@ -43,6 +45,7 @@ const Tasks = () => {
 
         const cardRes = await axios.get(`${Url}/card/${titleId}`);
         setTitle(cardRes.data.title);
+        setLastSaved(cardRes.data.time);
       } catch (err) {
         console.error("Error fetching data:", err);
         setTasks([]);
@@ -82,9 +85,6 @@ const Tasks = () => {
   };
 
   const handleSave = async () => {
-    const now = new Date();
-    const time = now.toLocaleString();
-    setLastSaved(new Date().toLocaleString());
     const updatedTasks = tasks.map((t) => ({
       _id: t._id,
       checked: t.checked,
@@ -92,8 +92,10 @@ const Tasks = () => {
     }));
 
     try {
-      await axios.put(`${Url}/tasks/save`, { tasks: updatedTasks, time });
+      await axios.put(`${Url}/tasks/save`, { tasks: updatedTasks });
       toast.success("Tasks saved successfully!");
+      const cardRes = await axios.get(`${Url}/card/${titleId}`);
+      setLastSaved(cardRes.data.time);
     } catch (err) {
       console.error("Save failed:", err);
       toast.error("Failed to save tasks.");
@@ -251,7 +253,10 @@ const Tasks = () => {
         <h2 className="mt-5 font-bold bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent text-4xl break-words uppercase max-md:text-2xl">
           {title}
         </h2>
-        <h4 className="text-gray-500 text-sm pr-3 max-md:pr-0">Last Saved:{lastSaved}</h4>
+        <h4 className="text-gray-500 text-sm pr-3 max-md:pr-0">
+          Last Saved:{" "}
+          {lastSaved ? new Date(lastSaved).toLocaleString() : "Never"}
+        </h4>
       </div>
 
       {isLoading ? (

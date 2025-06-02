@@ -26,10 +26,11 @@ const TitleCard = ({ card, onEdit, onDelete }) => {
           </div>
         </div>
         <div className="h-full">
-          <div className="flex justify-around items-center h-full flex-col px-4 text-center">
-            <h3 className="uppercase text-2xl font-extralight mt-4 mb-2 break-words w-full bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent">
+          <div className="flex justify-around h-full flex-col px-4">
+            <h3 className="uppercase text-center text-2xl font-extralight mt-4 mb-2 break-words w-full bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent">
               {card.title}
             </h3>
+            <p className="text-gray-500 text-sm font-extralight text-right">Last Saved:{card.title}</p>
             <Link to={`/tasks/${card._id}`} className="w-full">
               <button className="flex group justify-center gap-1 bg-gradient-to-r from-[#485563] to-[#29323c] text-white w-full py-1 my-2 text-xl rounded-md active:scale-95 duration-300 cursor-pointer hover:bg-gradient-to-l">
                 <p>Tasks</p>
