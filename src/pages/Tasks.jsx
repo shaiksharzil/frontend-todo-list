@@ -92,7 +92,7 @@ const Tasks = () => {
     }));
 
     try {
-      await axios.put(`${Url}/tasks/save`, { tasks: updatedTasks });
+      await axios.put(`${Url}/tasks/save`, { tasks: updatedTasks, titleId });
       toast.success("Tasks saved successfully!");
       const cardRes = await axios.get(`${Url}/card/${titleId}`);
       setLastSaved(cardRes.data.time);
@@ -253,9 +253,9 @@ const Tasks = () => {
         <h2 className="mt-5 font-bold bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent text-4xl break-words uppercase max-md:text-2xl">
           {title}
         </h2>
-        <h4 className="text-gray-500 text-sm pr-3 max-md:pr-0">
-          Last Saved:{" "}
-          {lastSaved ? new Date(lastSaved).toLocaleString() : "Never"}
+        <h4 className="text-gray-500 text-xl pr-3 max-md:pr-0 max-md:text-sm">
+          {" "}
+          {lastSaved ? new Date(lastSaved).toLocaleString() : " "}
         </h4>
       </div>
 

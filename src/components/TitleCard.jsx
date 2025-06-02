@@ -30,7 +30,10 @@ const TitleCard = ({ card, onEdit, onDelete }) => {
             <h3 className="uppercase text-center text-2xl font-extralight mt-4 mb-2 break-words w-full bg-gradient-to-b from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent">
               {card.title}
             </h3>
-            <p className="text-gray-500 text-sm font-extralight text-right">Last Saved:{card.title}</p>
+            <p className="bg-gradient-to-bl from-[#304352] to-[#d7d2cc] bg-clip-text text-transparent text-[10px] font-extralight text-right">
+              Last Saved:{" "}
+              {card.time ? new Date(card.time).toLocaleString() : " "}
+            </p>
             <Link to={`/tasks/${card._id}`} className="w-full">
               <button className="flex group justify-center gap-1 bg-gradient-to-r from-[#485563] to-[#29323c] text-white w-full py-1 my-2 text-xl rounded-md active:scale-95 duration-300 cursor-pointer hover:bg-gradient-to-l">
                 <p>Tasks</p>
